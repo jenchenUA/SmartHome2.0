@@ -1,0 +1,16 @@
+jar {
+    archivesBaseName = 'smarthome'
+    project.version = ''
+}
+
+bootJar {
+    enabled = true
+    manifest {
+        attributes 'Main-Class': 'org.springframework.boot.loader.JarLauncher'
+        attributes 'Start-Class': 'com.smarthome.starter.SmartHomeApplication'
+    }
+}
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-web")
+}

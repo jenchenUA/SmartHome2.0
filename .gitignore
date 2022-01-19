@@ -1,7 +1,7 @@
 /.idea/
-/target/
+**/target/
 .gradle/
-/build/
+**/build/
 gradle-app.setting
 !gradle-wrapper.jar
 .gradletasknamecache

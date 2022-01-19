@@ -1,19 +1,53 @@
-plugins {
-    id 'java'
+buildscript {
+    ext {
+        springBootVersion = '2.6.2'
+        springDependectyManagementVersion = '1.0.11.RELEASE'
+
+        pi4jVersion = '2.1.1'
+
+        junitVersion = '5.7.2'
+    }
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+plugins {
+    id 'org.springframework.boot' version "$springBootVersion"
+    id 'io.spring.dependency-management' version "$springDependectyManagementVersion"
+    id 'java'
+}
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
-}
+subprojects { project ->
+    group 'com.smarthome'
+    version '1.0-SNAPSHOT'
 
-test {
-    useJUnitPlatform()
+    sourceCompatibility = 17
+    targetCompatibility = 17
+
+    repositories {
+        mavenCentral()
+    }
+
+    bootJar {
+        enabled = false
+    }
+
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
+
+    dependencyManagement {
+        dependencies {
+            dependency "com.pi4j:pi4j-core:$pi4jVersion"
+
+            dependency "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+            dependency "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
 }
