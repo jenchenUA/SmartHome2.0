@@ -4,9 +4,14 @@ import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.smarthome.drivers.Ads1115;
 import com.smarthome.repositories.WarmFloorConfigRepository;
 import lombok.Builder;
+import lombok.extern.java.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Builder
 public class WarmFloor implements AutoCloseable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(WarmFloor.class);
 
     private static final float ROOM_TEMPERATURE = 298.15f;
     private static final float ZERO_TEMPERATURE = 273.15f;
@@ -35,6 +40,7 @@ public class WarmFloor implements AutoCloseable {
 
     public void doWork() {
         double currentTemperature = getCurrentTemperatureInCelsius();
+        LOG.info("Current temperature {} in {}", currentTemperature, config.getName());
         if (currentTemperature < config.getThreshold() - config.getEnableThreshold()) {
             relay.setState(true);
         } else if (currentTemperature >= config.getThreshold()) {
