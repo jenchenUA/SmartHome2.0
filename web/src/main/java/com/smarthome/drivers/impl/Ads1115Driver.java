@@ -44,7 +44,7 @@ public class Ads1115Driver implements Ads1115 {
         this.context = pi4j;
         this.i2cBus = i2cBus;
         this.gain = gain;
-        I2CProvider i2CProvider = pi4j.getI2CProvider();
+        I2CProvider i2CProvider = pi4j.provider("linuxfs-i2c");
         I2CConfig i2cConfig = I2C.newConfigBuilder(pi4j).id(deviceId).bus(i2cBus).device(address).build();
         i2c = i2CProvider.create(i2cConfig);
         LOG.info("ADS1115 Connected to i2c bus={} address={}. OK.", i2cBus, address);
