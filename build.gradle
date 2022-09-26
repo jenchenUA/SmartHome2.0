@@ -6,6 +6,7 @@ buildscript {
         pi4jVersion = '2.1.1'
         rpiDriversVersion = '2.1.1'
         mariaDbClientVersion = '3.0.7'
+        slf4jVersion = '2.0.2'
 
         junitVersion = '5.7.2'
     }
@@ -48,6 +49,7 @@ subprojects { project ->
             dependency "com.pi4j:pi4j-plugin-mock:$pi4jVersion"
             dependency "one.microproject.rpi:rpi-drivers:$rpiDriversVersion"
             dependency "org.mariadb.jdbc:mariadb-java-client:$mariaDbClientVersion"
+            dependency "org.slf4j:slf4j-api:$slf4jVersion"
 
 
             dependency "org.junit.jupiter:junit-jupiter-api:$junitVersion"
