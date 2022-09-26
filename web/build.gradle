@@ -7,10 +7,17 @@ bootJar {
     enabled = true
     manifest {
         attributes 'Main-Class': 'org.springframework.boot.loader.JarLauncher'
-        attributes 'Start-Class': 'com.smarthome.starter.SmartHomeApplication'
+        attributes 'Start-Class': 'com.smarthome.SmartHomeApplication'
     }
 }
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("com.pi4j:pi4j-core")
+    implementation("com.pi4j:pi4j-plugin-raspberrypi")
+    implementation("com.pi4j:pi4j-plugin-linuxfs")
+    implementation("com.pi4j:pi4j-plugin-mock")
+    implementation("one.microproject.rpi:rpi-drivers")
+    implementation("org.mariadb.jdbc:mariadb-java-client")
 }

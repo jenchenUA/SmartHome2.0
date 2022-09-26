@@ -1,0 +1,32 @@
+@import "src/variables";
+
+.header {
+  width: 100%;
+  grid-area: header;
+  background: $primary;
+  display: flex;
+  align-items: center;
+
+  &--row {
+    padding-left: 16px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+  }
+
+  &--title {
+    color: #000;
+    text-decoration: none;
+  }
+
+  &--menu-button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+  }
+}

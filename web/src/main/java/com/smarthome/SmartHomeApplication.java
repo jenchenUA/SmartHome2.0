@@ -1,4 +1,4 @@
-package com.smarthome.starter;
+package com.smarthome;
 
 
 import org.springframework.boot.SpringApplication;
