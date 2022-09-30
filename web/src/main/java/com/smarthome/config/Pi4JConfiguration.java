@@ -15,6 +15,7 @@ import com.pi4j.plugin.mock.provider.pwm.MockPwmProviderImpl;
 import com.pi4j.plugin.mock.provider.serial.MockSerialProviderImpl;
 import com.pi4j.plugin.mock.provider.spi.MockSpiProviderImpl;
 import com.smarthome.drivers.Ads1115;
+import com.smarthome.drivers.Ads1115Gain;
 import com.smarthome.drivers.impl.Ads1115Driver;
 import com.smarthome.listeners.WarmFloorChangeRelayStateListener;
 import com.smarthome.repositories.WarmFloorConfigRepository;
@@ -57,7 +58,7 @@ public class Pi4JConfiguration {
 
     @Bean(destroyMethod = "close")
     public Ads1115 createAds(Context context) {
-        return new Ads1115Driver(context);
+        return new Ads1115Driver(context, 0x48, Ads1115Gain.GAIN_6_144V, 1);
     }
 
     @Bean
@@ -78,9 +79,11 @@ public class Pi4JConfiguration {
         DigitalOutputConfig relayConfig = DigitalOutputConfig.newBuilder(context)
                 .id("D" + configuration.getRelayPin())
                 .address(configuration.getRelayPin())
+                .provider("pigpio-digital-output")
                 .initial(DigitalState.HIGH)
+                .shutdown(DigitalState.HIGH)
                 .build();
-        DigitalOutput output = context.getDigitalOutputProvider().create(relayConfig);
+        DigitalOutput output = context.create(relayConfig);
         output.addListener(new WarmFloorChangeRelayStateListener(warmFloorConfigRepository, configuration));
         return output;
     }
