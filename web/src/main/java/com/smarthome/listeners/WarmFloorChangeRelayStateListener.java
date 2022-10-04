@@ -20,8 +20,6 @@ public class WarmFloorChangeRelayStateListener implements DigitalStateChangeList
     @Override
     public void onDigitalStateChange(DigitalStateChangeEvent event) {
         boolean enabled = event.state().isLow();
-        LOG.info("State of pin {} is changed to {}", event.source().id(), enabled);
-        configuration.setEnabled(enabled);
-        repository.save(configuration);
+        LOG.info("Relay on the GPIO pin {} is enabled: {}", event.source().id(), enabled);
     }
 }

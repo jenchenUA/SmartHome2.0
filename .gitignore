@@ -5,3 +5,5 @@
 gradle-app.setting
 !gradle-wrapper.jar
 .gradletasknamecache
+*.iml
+/.DS_Store

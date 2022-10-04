@@ -19,9 +19,9 @@ import com.smarthome.drivers.Ads1115Gain;
 import com.smarthome.drivers.impl.Ads1115Driver;
 import com.smarthome.listeners.WarmFloorChangeRelayStateListener;
 import com.smarthome.repositories.WarmFloorConfigRepository;
-import com.smarthome.services.WarmFloorService;
 import com.smarthome.warmfloor.WarmFloor;
 import com.smarthome.warmfloor.WarmFloorConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -57,8 +57,10 @@ public class Pi4JConfiguration {
     }
 
     @Bean(destroyMethod = "close")
-    public Ads1115 createAds(Context context) {
-        return new Ads1115Driver(context, 0x48, Ads1115Gain.GAIN_6_144V, 1);
+    public Ads1115 createAds(Context context,
+                             @Value("${smarthome.ads1115.address}") int address,
+                             @Value("${smarthome.ads1115.gain}") Ads1115Gain gain) {
+        return new Ads1115Driver(context, address, gain, 1);
     }
 
     @Bean
@@ -66,7 +68,7 @@ public class Pi4JConfiguration {
         return repository.findAll().stream()
                 .map(config -> WarmFloor.builder()
                         .ads1115(ads1115)
-                        .relay(prepareDigitalOutput(config, context, repository))
+                        .relay(prepareRelayPin(config, context, repository))
                         .config(config)
                         .warmFloorConfigRepository(repository)
                         .build()
@@ -74,10 +76,10 @@ public class Pi4JConfiguration {
                 .collect(Collectors.toList());
     }
 
-    private DigitalOutput prepareDigitalOutput(WarmFloorConfig configuration, Context context,
-                                               WarmFloorConfigRepository warmFloorConfigRepository) {
+    private DigitalOutput prepareRelayPin(WarmFloorConfig configuration, Context context,
+                                          WarmFloorConfigRepository warmFloorConfigRepository) {
         DigitalOutputConfig relayConfig = DigitalOutputConfig.newBuilder(context)
-                .id("D" + configuration.getRelayPin())
+                .id("WarmFloorRelayD" + configuration.getRelayPin())
                 .address(configuration.getRelayPin())
                 .provider("pigpio-digital-output")
                 .initial(DigitalState.HIGH)

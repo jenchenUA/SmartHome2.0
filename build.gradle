@@ -7,6 +7,7 @@ buildscript {
         rpiDriversVersion = '2.1.1'
         mariaDbClientVersion = '3.0.7'
         slf4jVersion = '2.0.2'
+        mapStructVersion = '1.5.2.Final'
 
         junitVersion = '5.7.2'
     }
@@ -58,8 +59,11 @@ subprojects { project ->
     }
 
     dependencies {
+        implementation("org.mapstruct:mapstruct:${mapStructVersion}")
+
         compileOnly 'org.projectlombok:lombok:1.18.24'
         annotationProcessor 'org.projectlombok:lombok:1.18.24'
+        annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
 
         testCompileOnly 'org.projectlombok:lombok:1.18.24'
         testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'

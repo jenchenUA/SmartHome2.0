@@ -4,12 +4,11 @@ import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.smarthome.drivers.Ads1115;
 import com.smarthome.repositories.WarmFloorConfigRepository;
 import lombok.Builder;
-import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Builder
-public class WarmFloor implements AutoCloseable {
+public class WarmFloor implements AutoCloseable, Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(WarmFloor.class);
 
@@ -29,27 +28,46 @@ public class WarmFloor implements AutoCloseable {
         this.warmFloorConfigRepository = warmFloorConfigRepository;
     }
 
+    public long getId() {
+        return config.getId();
+    }
+
+    public boolean isEnabled() {
+        return config.isEnabled();
+    }
+
     public double getCurrentTemperatureInCelsius() {
         double voltage = ads1115.getVoltageOn(config.getAdsInput().getInputCode());
         double temperature = getCurrentTemperatureInKelvin(voltage);
         if (Double.isNaN(temperature)) {
-            return ZERO_TEMPERATURE;
+            return 0;
         }
         return temperature - ZERO_TEMPERATURE;
     }
 
-    public void doWork() {
+    @Override
+    public void run() {
         double currentTemperature = getCurrentTemperatureInCelsius();
         LOG.info("Current temperature {} in {}", currentTemperature, config.getName());
-        if (currentTemperature < config.getThreshold() - config.getEnableThreshold()) {
+        relay.setState(shouldChangeState(currentTemperature));
+    }
+
+    public boolean isHeatingTurnedOn() {
+        return relay.isLow();
+    }
+
+    public WarmFloorConfig getConfig() {
+        return config;
+    }
+
+    public void stopHeating() {
+        if (!isEnabled() && isHeatingTurnedOn()) {
             relay.setState(true);
-        } else if (currentTemperature >= config.getThreshold()) {
-            relay.setState(false);
         }
     }
 
-    public boolean isWarmingTurnedOn() {
-        return relay.isOn();
+    private boolean shouldChangeState(double currentTemperature) {
+        return !(currentTemperature < config.getThreshold() - config.getEnableThreshold());
     }
 
     private double getCurrentTemperatureInKelvin(double voltage) {
@@ -68,7 +86,7 @@ public class WarmFloor implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         relay.shutdown(ads1115.getContext());
     }
 }
