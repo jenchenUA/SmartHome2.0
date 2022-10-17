@@ -1,4 +1,4 @@
 rootProject.name = 'smarthome2.0'
 
-include 'web'
+include 'web', 'front'
 

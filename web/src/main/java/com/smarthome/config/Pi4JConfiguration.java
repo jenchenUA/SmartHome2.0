@@ -17,6 +17,7 @@ import com.pi4j.plugin.mock.provider.spi.MockSpiProviderImpl;
 import com.smarthome.drivers.Ads1115;
 import com.smarthome.drivers.Ads1115Gain;
 import com.smarthome.drivers.impl.Ads1115Driver;
+import com.smarthome.drivers.impl.MockAds1115Driver;
 import com.smarthome.listeners.WarmFloorChangeRelayStateListener;
 import com.smarthome.repositories.WarmFloorConfigRepository;
 import com.smarthome.warmfloor.WarmFloor;
@@ -57,18 +58,30 @@ public class Pi4JConfiguration {
     }
 
     @Bean(destroyMethod = "close")
+    @Profile("!test")
     public Ads1115 createAds(Context context,
                              @Value("${smarthome.ads1115.address}") int address,
-                             @Value("${smarthome.ads1115.gain}") Ads1115Gain gain) {
-        return new Ads1115Driver(context, address, gain, 1);
+                             @Value("${smarthome.ads1115.gain}") Ads1115Gain gain,
+                             @Value("${smarthome.i2c.provider}") String i2cProvider) {
+        return new Ads1115Driver(context, address, gain, 1, i2cProvider);
+    }
+
+    @Bean(destroyMethod = "close")
+    @Profile("test")
+    public Ads1115 createMockAds(Context context,
+                                 @Value("${smarthome.ads1115.address}") int address,
+                                 @Value("${smarthome.ads1115.gain}") Ads1115Gain gain,
+                                 @Value("${smarthome.i2c.provider}") String i2cProvider) {
+        return new MockAds1115Driver(context, address, gain, 1, i2cProvider);
     }
 
     @Bean
-    public List<WarmFloor> setupWarmFloor(WarmFloorConfigRepository repository, Context context, Ads1115 ads1115) {
+    public List<WarmFloor> setupWarmFloor(WarmFloorConfigRepository repository, Context context, Ads1115 ads1115,
+                                          @Value("${smarthome.dout.provider}") String digitalOutputProvider) {
         return repository.findAll().stream()
                 .map(config -> WarmFloor.builder()
                         .ads1115(ads1115)
-                        .relay(prepareRelayPin(config, context, repository))
+                        .relay(prepareRelayPin(config, context, repository, digitalOutputProvider))
                         .config(config)
                         .warmFloorConfigRepository(repository)
                         .build()
@@ -77,11 +90,12 @@ public class Pi4JConfiguration {
     }
 
     private DigitalOutput prepareRelayPin(WarmFloorConfig configuration, Context context,
-                                          WarmFloorConfigRepository warmFloorConfigRepository) {
+                                          WarmFloorConfigRepository warmFloorConfigRepository,
+                                          String digitalOutputProvider) {
         DigitalOutputConfig relayConfig = DigitalOutputConfig.newBuilder(context)
                 .id("WarmFloorRelayD" + configuration.getRelayPin())
                 .address(configuration.getRelayPin())
-                .provider("pigpio-digital-output")
+                .provider(digitalOutputProvider)
                 .initial(DigitalState.HIGH)
                 .shutdown(DigitalState.HIGH)
                 .build();

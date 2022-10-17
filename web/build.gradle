@@ -1,3 +1,30 @@
+buildscript {
+    ext {
+        springBootVersion = '2.6.2'
+        springDependectyManagementVersion = '1.0.11.RELEASE'
+
+        pi4jVersion = '2.1.1'
+        rpiDriversVersion = '2.1.1'
+        mariaDbClientVersion = '3.0.7'
+        slf4jVersion = '2.0.2'
+        mapStructVersion = '1.5.2.Final'
+
+        junitVersion = '5.7.2'
+    }
+}
+
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
 jar {
     archivesBaseName = 'smarthome'
     project.version = ''
@@ -15,11 +42,43 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
-    implementation("com.pi4j:pi4j-core")
-    implementation("com.pi4j:pi4j-plugin-raspberrypi")
-    implementation("com.pi4j:pi4j-plugin-linuxfs")
-    implementation("com.pi4j:pi4j-plugin-mock")
-    implementation("one.microproject.rpi:rpi-drivers")
-    implementation("org.mariadb.jdbc:mariadb-java-client")
-    implementation('org.slf4j:slf4j-simple')
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("com.pi4j:pi4j-core:$pi4jVersion")
+    implementation("com.pi4j:pi4j-plugin-raspberrypi:$pi4jVersion")
+    implementation("com.pi4j:pi4j-plugin-linuxfs:$pi4jVersion")
+    implementation("com.pi4j:pi4j-plugin-mock:$pi4jVersion")
+    implementation("one.microproject.rpi:rpi-drivers:$rpiDriversVersion")
+    implementation("org.mariadb.jdbc:mariadb-java-client:$mariaDbClientVersion")
+    implementation("org.slf4j:slf4j-simple:$slf4jVersion")
+
+    implementation("org.mapstruct:mapstruct:${mapStructVersion}")
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    runtimeOnly project(":front")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 }
+
+test {
+    useJUnitPlatform()
+}
+
+task copyStatic(type: Copy) {
+    from "$rootDir/front/build"
+    into "$rootDir/web/src/main/resources/static/."
+}
+
+task cleanStatic(type: Delete) {
+    delete "$rootDir/web/src/main/resources/static"
+}
+
+processResources.dependsOn(copyStatic)
+clean.dependsOn(cleanStatic)
+compileJava.dependsOn ":front:build"

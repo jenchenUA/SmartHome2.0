@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface WarmFloorService {
 
-    void createWarmFloorConfiguration(WarmFloorConfig configuration);
+    WarmFloorData createWarmFloorConfiguration(WarmFloorConfig configuration);
 
     WarmFloor prepareWarmFloorInstance(WarmFloorConfig configuration);
 
@@ -17,4 +17,6 @@ public interface WarmFloorService {
     void remove(long id);
 
     List<WarmFloorData> getAllWarmFloors();
+
+    void setNewThreshold(long id, double newThreshold);
 }

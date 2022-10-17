@@ -30,21 +30,21 @@ public class Ads1115Driver implements Ads1115 {
     private final I2C i2c;
     private final Ads1115Gain gain;
 
-    public Ads1115Driver(Context pi4j) {
-        this(pi4j, ADDRESS, Ads1115Gain.GAIN_4_096V, 1);
+    public Ads1115Driver(Context pi4j, String i2cProvider) {
+        this(pi4j, ADDRESS, Ads1115Gain.GAIN_4_096V, 1, i2cProvider);
     }
 
-    public Ads1115Driver(Context pi4j, int address) {
-        this(pi4j, address, Ads1115Gain.GAIN_4_096V, 1);
+    public Ads1115Driver(Context pi4j, int address, String i2cProvider) {
+        this(pi4j, address, Ads1115Gain.GAIN_4_096V, 1, i2cProvider);
     }
 
-    public Ads1115Driver(Context pi4j, int address, Ads1115Gain gain, int i2cBus) {
+    public Ads1115Driver(Context pi4j, int address, Ads1115Gain gain, int i2cBus, String i2cProvider) {
         this.address = address;
         this.deviceId = "ADS1115";
         this.context = pi4j;
         this.i2cBus = i2cBus;
         this.gain = gain;
-        I2CProvider i2CProvider = pi4j.provider("linuxfs-i2c");
+        I2CProvider i2CProvider = pi4j.provider(i2cProvider);
         I2CConfig i2cConfig = I2C.newConfigBuilder(pi4j).id(deviceId).bus(i2cBus).device(address).build();
         i2c = i2CProvider.create(i2cConfig);
         LOG.info("ADS1115 Connected to i2c bus={} address={}. OK.", i2cBus, address);

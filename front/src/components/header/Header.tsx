@@ -1,20 +1,21 @@
-import React from 'react';
-import { ReactComponent as BurgerIcon } from "./svg/burger-menu.svg";
+import React, {MouseEventHandler} from 'react';
 import './Header.scss'
-import {Link} from "react-router-dom";
+import {AppBar, IconButton, Toolbar, Typography} from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
 
-function Header(props : {toggleFunction: any}) {
+function Header(props : {toggleFunction: MouseEventHandler}) {
     return (
-        <header className="header">
-            <section className="header--row">
-                <button className="header--menu-button" onClick={props.toggleFunction}>
-                    <BurgerIcon/>
-                </button>
-                <Link to="/" className="header--title">
-                    <span className="mdc-top-app-bar__title">Smart Home Console</span>
-                </Link>
-            </section>
-        </header>
+        <AppBar position={"relative"} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+            <Toolbar>
+                <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}
+                            onClick={props.toggleFunction}>
+                    <MenuIcon />
+                </IconButton>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    Smart Home Console
+                </Typography>
+            </Toolbar>
+        </AppBar>
     );
 }
 

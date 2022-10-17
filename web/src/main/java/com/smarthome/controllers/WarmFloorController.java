@@ -1,7 +1,10 @@
 package com.smarthome.controllers;
 
 
+import com.smarthome.dtos.WarmFloorConfigData;
 import com.smarthome.dtos.WarmFloorData;
+import com.smarthome.dtos.WarmFloorThresholdData;
+import com.smarthome.mappers.WarmFloorConfigDataMapper;
 import com.smarthome.services.WarmFloorService;
 import com.smarthome.warmfloor.WarmFloorConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/warm-floor")
+@RequestMapping("/api/warm-floor")
 public class WarmFloorController {
 
     @Autowired
     public WarmFloorService warmFloorService;
+    @Autowired
+    private WarmFloorConfigDataMapper warmFloorConfigDataMapper;
 
     @GetMapping
     public List<WarmFloorData> getAllWarmFloors() {
@@ -32,14 +37,21 @@ public class WarmFloorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public void createWarmFloorConfiguration(@RequestBody WarmFloorConfig configuration) {
-        warmFloorService.createWarmFloorConfiguration(configuration);
+    public WarmFloorData createWarmFloorConfiguration(@RequestBody WarmFloorConfigData configuration) {
+        WarmFloorConfig config = warmFloorConfigDataMapper.map(configuration);
+        return warmFloorService.createWarmFloorConfiguration(config);
     }
 
     @PutMapping("/{id}/toggle")
     @ResponseStatus(HttpStatus.OK)
     public void toggleWarmFloor(@PathVariable long id) {
         warmFloorService.toggle(id);
+    }
+
+    @PutMapping("/{id}/threshold")
+    @ResponseStatus(HttpStatus.OK)
+    public void setNewThreshold(@PathVariable long id, @RequestBody WarmFloorThresholdData thresholdData) {
+        warmFloorService.setNewThreshold(id, thresholdData.getNewThreshold());
     }
 
     @DeleteMapping("/{id}")

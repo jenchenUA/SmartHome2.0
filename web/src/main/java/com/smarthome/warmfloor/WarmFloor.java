@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Builder
-public class WarmFloor implements AutoCloseable, Runnable {
+public class WarmFloor implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(WarmFloor.class);
 
@@ -85,8 +85,7 @@ public class WarmFloor implements AutoCloseable, Runnable {
         return config.getSupportResistorResistance() * ((config.getVoltage() / voltage) - 1f);
     }
 
-    @Override
-    public void close() {
-        relay.shutdown(ads1115.getContext());
+    public DigitalOutput shutdown() {
+        return (DigitalOutput) relay.shutdown(ads1115.getContext());
     }
 }

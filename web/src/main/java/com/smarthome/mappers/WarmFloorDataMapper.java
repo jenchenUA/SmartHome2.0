@@ -13,5 +13,6 @@ public interface WarmFloorDataMapper {
     @Mapping(source = "warmFloor.config.id", target = "id")
     @Mapping(source = "warmFloor.config.name", target = "name")
     @Mapping(source = "warmFloor.config.enabled", target = "enabled")
+    @Mapping(source = "warmFloor.config.threshold", target = "threshold")
     WarmFloorData map(WarmFloor warmFloor);
 }

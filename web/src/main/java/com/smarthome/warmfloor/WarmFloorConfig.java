@@ -1,5 +1,6 @@
 package com.smarthome.warmfloor;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smarthome.drivers.Ads1115Input;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class WarmFloorConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @JsonProperty("bParameter")
     private int bParameter;
     private double supportResistorResistance;
     private double thermistorResistance;

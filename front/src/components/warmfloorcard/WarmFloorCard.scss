@@ -1,0 +1,20 @@
+@import "src/variables";
+
+.card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 0 16px 0 16px;
+
+
+  &--temperature {
+    text-align: center;
+    font-weight: bold;
+    font-size: 50px;
+  }
+
+  &--actions {
+    display: flex;
+    justify-content: space-between;
+  }
+}

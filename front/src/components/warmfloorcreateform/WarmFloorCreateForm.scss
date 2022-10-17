@@ -1,0 +1,20 @@
+.warm-floor {
+
+  &--create-form {
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFFFF;
+    padding: 16px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    gap: 10px;
+  }
+
+  &--create-action {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 16px;
+  }
+}

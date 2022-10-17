@@ -27,11 +27,11 @@ public class WarmFloorWorker {
     public void workWithWarmFloors() {
         warmFloors.stream()
                 .filter(WarmFloor::isEnabled)
-                .forEach(this::runJob);
+                .forEach(WarmFloor::run);
+        warmFloors.forEach(this::sendUpdate);
     }
 
-    private void runJob(WarmFloor warmFloor) {
-        warmFloor.run();
+    private void sendUpdate(WarmFloor warmFloor) {
         WarmFloorData message = warmFloorDataMapper.map(warmFloor);
         simpMessagingTemplate.convertAndSend(WebSocketConfiguration.WARM_FLOOR_TOPIC, message);
     }

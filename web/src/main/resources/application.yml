@@ -7,7 +7,12 @@ spring:
     username: ${DATABASE_USER}
     password: ${DATABASE_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
+
 smarthome:
+  i2c:
+    provider: ${I2C_PROVIDER:linuxfs-i2c}
+  dout:
+    provider: ${DOUT_PROVIDER:pigpio-digital-output}
   ads1115:
     address: ${ADS1115_ADDRESS:0x48}
     gain: ${ADS1115_GAIN:GAIN_6_144V}
