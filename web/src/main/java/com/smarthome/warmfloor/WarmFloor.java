@@ -48,7 +48,7 @@ public class WarmFloor implements Runnable {
     @Override
     public void run() {
         double currentTemperature = getCurrentTemperatureInCelsius();
-        LOG.info("Current temperature {} in {}", currentTemperature, config.getName());
+        LOG.debug("Current temperature {} in {}", currentTemperature, config.getName());
         relay.setState(shouldChangeState(currentTemperature));
     }
 

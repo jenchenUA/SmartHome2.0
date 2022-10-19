@@ -43,6 +43,7 @@ dependencies {
 
     implementation("org.mapstruct:mapstruct:${mapStructVersion}")
 
+    runtimeOnly('org.liquibase:liquibase-core:4.17.0')
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"

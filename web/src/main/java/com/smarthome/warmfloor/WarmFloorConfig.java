@@ -16,7 +16,7 @@ import javax.persistence.Id;
 public class WarmFloorConfig {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @JsonProperty("bParameter")
     private int bParameter;
