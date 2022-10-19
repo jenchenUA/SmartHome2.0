@@ -47,9 +47,7 @@ jobs:
         artifacts: "./web/build/libs/smarthome.jar"
         draft: false
         prerelease: false
-        token: ${{ github.token }}
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+        token: ${{ secrets.GITHUB_TOKEN }}
 #    - name: Upload JAR
 #      uses: actions/upload-release-asset@v1
 #      env:
