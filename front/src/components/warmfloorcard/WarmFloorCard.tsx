@@ -82,8 +82,10 @@ export default class WarmFloorCard extends React.Component<WarmFloorProperties, 
     }
 
     private toggle(id: number) {
-        this.state.warmFloor.enabled = !this.state.warmFloor.enabled;
-        this.setState(this.state);
+        const state = this.state;
+        const warmFloor = {...state.warmFloor};
+        warmFloor.enabled = !warmFloor.enabled;
+        this.setState(new WarmFloorCardState(warmFloor, state.isMoreMenuOpened, state.isDeleteConfirmationDialog));
         this.warmFloorService.toggle(id);
     }
 
