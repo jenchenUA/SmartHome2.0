@@ -13,4 +13,5 @@ task npmBuild(type: NpmTask) {
     args = ["run", "build"]
 }
 
+npmBuild.dependsOn(npmInstall)
 assemble.dependsOn(npmBuild)
