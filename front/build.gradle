@@ -7,6 +7,7 @@ apply plugin: "base"
 
 node {
     version = '18.10.0'
+    download = true
 }
 
 task npmBuild(type: NpmTask) {
