@@ -56,6 +56,10 @@ public class WarmFloor implements Runnable {
         return relay.isLow();
     }
 
+    public boolean isHeatingTurnedOff() {
+        return !isHeatingTurnedOn();
+    }
+
     public WarmFloorConfig getConfig() {
         return config;
     }
@@ -67,7 +71,8 @@ public class WarmFloor implements Runnable {
     }
 
     private boolean shouldChangeState(double currentTemperature) {
-        return !(currentTemperature < config.getThreshold() - config.getEnableThreshold());
+        double enableThreshold = isHeatingTurnedOff() ? config.getEnableThreshold() : 0;
+        return !(currentTemperature < config.getThreshold() - enableThreshold);
     }
 
     private double getCurrentTemperatureInKelvin(double voltage) {
