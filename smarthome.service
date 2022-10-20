@@ -1,0 +1,17 @@
+[Unit]
+Description=Smart Home Service
+After=syslog.target network.target
+
+[Service]
+SuccessExitStatus=143
+
+Type=simple
+
+Environment="DATABASE_USER={USER}"
+Environment="DATABASE_PASSWORD={PASSWORD}"
+WorkingDirectory=/
+ExecStart=/usr/lib/jvm/java-11-openjdk-armhfbin/java -jar smarthome.jar
+ExecStop=/bin/kill -15 $MAINPID
+
+[Install]
+WantedBy=multi-user.target

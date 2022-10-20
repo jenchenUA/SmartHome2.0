@@ -47,15 +47,4 @@ jobs:
         name: "latest"
         tag: "latest"
         artifacts: "./web/build/libs/smarthome.jar"
-        draft: false
-        prerelease: false
         token: ${{ secrets.GITHUB_TOKEN }}
-#    - name: Upload JAR
-#      uses: actions/upload-release-asset@v1
-#      env:
-#        GITHUB_TOKEN: ${{ github.token }}
-#      with:
-#        upload_url: ${{ steps.create_release.outputs.upload_url }}
-#        asset_path: ./web/build/libs/smarthome.jar
-#        asset_name: smarthome.jar
-#        asset_content_type: application/java-archive
