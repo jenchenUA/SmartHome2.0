@@ -44,6 +44,7 @@ jobs:
     - name: Create Release
       uses: ncipollo/release-action@v1
       with:
+        allowUpdates: true
         name: "latest"
         tag: "latest"
         artifacts: "./web/build/libs/smarthome.jar"
